@@ -1,10 +1,10 @@
 resource "aws_service_discovery_private_dns_namespace" "this" {
-  name = "service-discovery.${var.global_params.domain}"
-  vpc  = aws_vpc.main.id
+  name = "service-discovery.${local.prefix}"
+  vpc  = data.aws_vpc.main.id
 }
 
 resource "aws_service_discovery_service" "this" {
-  name = var.global_params.prefix
+  name = local.prefix
 
   dns_config {
     namespace_id = aws_service_discovery_private_dns_namespace.this.id
@@ -23,7 +23,7 @@ resource "aws_service_discovery_service" "this" {
 }
 
 resource "aws_apigatewayv2_api" "this" {
-  name          = var.global_params.prefix
+  name          = local.prefix
   protocol_type = "HTTP"
 }
 
@@ -38,17 +38,17 @@ resource "aws_apigatewayv2_domain_name" "this" {
   }
 }
 
-resource "aws_apigatewayv2_api_mapping" "this" {
-  for_each    = toset(local.api_gateway_domain_names)
-  api_id      = aws_apigatewayv2_api.this.id
-  domain_name = aws_apigatewayv2_domain_name.this[each.value].id
-  stage       = aws_apigatewayv2_stage.this.id
-}
+# resource "aws_apigatewayv2_api_mapping" "this" {
+#   for_each    = toset(local.api_gateway_domain_names)
+#   api_id      = aws_apigatewayv2_api.this.id
+#   domain_name = aws_apigatewayv2_domain_name.this[each.value].id
+#   stage       = aws_apigatewayv2_stage.this.id
+# }
 
 resource "aws_apigatewayv2_vpc_link" "this" {
-  name               = var.global_params.prefix
+  name               = local.prefix
   security_group_ids = [aws_security_group.main_default.id]
-  subnet_ids         = aws_subnet.public.*.id
+  subnet_ids         = [data.aws_subnet.public_1.id]
 }
 
 resource "aws_apigatewayv2_integration" "this" {
@@ -95,5 +95,5 @@ resource "aws_apigatewayv2_stage" "this" {
 }
 
 resource "aws_cloudwatch_log_group" "api_gateway" {
-  name = "${var.global_params.prefix}-apigateway-${var.region_params.nick}"
+  name = "${local.prefix}-apigateway"
 }
