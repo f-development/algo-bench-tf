@@ -47,7 +47,7 @@ resource "aws_apigatewayv2_api" "this" {
 
 resource "aws_apigatewayv2_vpc_link" "this" {
   name               = local.prefix
-  security_group_ids = [aws_security_group.main_default.id]
+  security_group_ids = [data.aws_security_group.main_default.id]
   subnet_ids         = [data.aws_subnet.public_1.id]
 }
 
