@@ -165,8 +165,8 @@ resource "aws_ecs_task_definition" "this" {
     cpu_architecture        = "X86_64"
   }
 
-  execution_role_arn = aws_iam_role.ecs_task_execution
-  task_role_arn      = aws_iam_role.ecs_main
+  execution_role_arn = aws_iam_role.ecs_task_execution.arn
+  task_role_arn      = aws_iam_role.ecs_main.arn
 
   tags = {
     "f:resource" = "ecs-task-main"
