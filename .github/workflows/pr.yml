@@ -1,0 +1,49 @@
+name: pr
+on:
+  - pull_request
+
+permissions:
+  id-token: write
+  actions: write
+  contents: read
+  pull-requests: read
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    if: |
+      !contains(github.event.pull_request.labels.*.name, 'terraform: apply')
+    name: plan
+    steps:
+      - uses: actions/checkout@v3
+      - uses: aws-actions/configure-aws-credentials@v1-node16
+        with:
+          role-to-assume: arn:aws:iam::721756646069:role/f-development-algo-bench-tf-github-actions-terraform
+          aws-region: us-east-1
+      - uses: hashicorp/setup-terraform@v2.0.3
+      - run: >
+          terraform init
+          -backend-config=bucket=f-development-algo-bench-tf-state
+          -backend-config=dynamodb_table=f-development-algo-bench-tf-state-lock
+      - run: |
+          terraform plan -lock-timeout=1h \
+          -var=role_arn=arn:aws:iam::721756646069:role/f-admin-terraform \
+  apply:
+    runs-on: ubuntu-latest
+    if: |
+      contains(github.event.pull_request.labels.*.name, 'terraform: apply')
+    name: apply
+    steps:
+      - uses: actions/checkout@v3
+      - uses: aws-actions/configure-aws-credentials@v1-node16
+        with:
+          role-to-assume: arn:aws:iam::721756646069:role/f-development-algo-bench-tf-github-actions-terraform
+          aws-region: us-east-1
+      - uses: hashicorp/setup-terraform@v2.0.3
+      - run: >
+          terraform init
+          -backend-config=bucket=f-development-algo-bench-tf-state
+          -backend-config=dynamodb_table=f-development-algo-bench-tf-state-lock
+      - run: |
+          terraform apply -auto-approve -lock-timeout=1h \
+          -var=role_arn=arn:aws:iam::721756646069:role/f-admin-terraform \
