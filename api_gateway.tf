@@ -27,16 +27,16 @@ resource "aws_apigatewayv2_api" "this" {
   protocol_type = "HTTP"
 }
 
-resource "aws_apigatewayv2_domain_name" "this" {
-  for_each    = toset(local.api_gateway_domain_names)
-  domain_name = each.value
+# resource "aws_apigatewayv2_domain_name" "this" {
+#   for_each    = toset(local.api_gateway_domain_names)
+#   domain_name = each.value
 
-  domain_name_configuration {
-    certificate_arn = aws_acm_certificate.this.arn
-    endpoint_type   = "REGIONAL"
-    security_policy = "TLS_1_2"
-  }
-}
+#   domain_name_configuration {
+#     certificate_arn = aws_acm_certificate.this.arn
+#     endpoint_type   = "REGIONAL"
+#     security_policy = "TLS_1_2"
+#   }
+# }
 
 # resource "aws_apigatewayv2_api_mapping" "this" {
 #   for_each    = toset(local.api_gateway_domain_names)
