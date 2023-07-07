@@ -28,7 +28,6 @@ jobs:
       - run: |
           terraform plan -lock-timeout=1h \
           -var=role_arn=arn:aws:iam::721756646069:role/f-admin-terraform \
-          -var=impersonate_sa=terraform@f-development.iam.gserviceaccount.com
   apply:
     runs-on: ubuntu-latest
     if: |
@@ -48,4 +47,3 @@ jobs:
       - run: |
           terraform apply -auto-approve -lock-timeout=1h \
           -var=role_arn=arn:aws:iam::721756646069:role/f-admin-terraform \
-          -var=impersonate_sa=terraform@f-development.iam.gserviceaccount.com
