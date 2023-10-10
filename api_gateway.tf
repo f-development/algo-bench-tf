@@ -1,6 +1,6 @@
 resource "aws_service_discovery_private_dns_namespace" "this" {
   name = "service-discovery.${local.prefix}"
-  vpc  = data.aws_vpc.main.id
+  vpc  = aws_vpc.main.id
 }
 
 resource "aws_service_discovery_service" "this" {
@@ -47,8 +47,8 @@ resource "aws_apigatewayv2_api" "this" {
 
 resource "aws_apigatewayv2_vpc_link" "this" {
   name               = local.prefix
-  security_group_ids = [data.aws_security_group.main_default.id]
-  subnet_ids         = [data.aws_subnet.public_1.id]
+  security_group_ids = [aws_security_group.main_default.id]
+  subnet_ids         = aws_subnet.public.*.id
 }
 
 resource "aws_apigatewayv2_integration" "this" {
