@@ -1,15 +1,3 @@
-data "aws_vpc" "main" {
-  tags = {
-    Name = "f-development"
-  }
-}
-
-data "aws_subnet" "public_1" {
-  tags = {
-    Name = "f-development-public-1"
-  }
-}
-
 resource "aws_vpc" "main" {
   cidr_block           = local.vpc_cidr
   enable_dns_support   = true
