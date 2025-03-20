@@ -67,6 +67,10 @@ resource "aws_ecs_service" "this" {
   tags = {
     "f:resource" = "ecs-service-main"
   }
+
+  lifecycle {
+    ignore_changes = [desired_count]
+  }
 }
 
 resource "aws_ecs_task_definition" "this" {
