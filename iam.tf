@@ -19,9 +19,9 @@ resource "aws_iam_role" "ecs_task_execution" {
   }
 }
 
-resource "aws_iam_role_policy_attachment_exclusive" "ecs_task_execution_default" {
-  role       = aws_iam_role.ecs_task_execution.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+resource "aws_iam_role_policy_attachments_exclusive" "ecs_task_execution_default" {
+  role_name   = aws_iam_role.ecs_task_execution.name
+  policy_arns = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
 resource "aws_iam_role" "ecs_main" {
